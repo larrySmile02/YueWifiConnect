@@ -1,0 +1,54 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+        jcenter()
+        
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.3.1'
+        
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+        jcenter()
+        
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+
+ext{
+    targetAndroid9SdkVersion = 28
+    compileAndroid9SdkVersion = 28
+    android9BuildToolsVersion = '28.0.3'
+    android9SupportLibVersion = '28.0.0'
+
+    targetSdkVersion = 27
+    compileSdkVersion = compileAndroid9SdkVersion
+    buildToolsVersion = android9BuildToolsVersion
+    supportLibVersion = android9SupportLibVersion
+
+    minSdkVersion = 16
+    cardViewVersion = '28.0.0'
+    customtabsVersion = '28.0.0'
+    v7Version = '28.0.0'
+    recyclerviewVersion = '28.0.0'
+    SUPPORTVERSION = '28.0.0'
+    lifecycleExtensionVersion = '1.1.0'
+}
