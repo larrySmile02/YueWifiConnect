@@ -29,15 +29,17 @@ public class WifiUtil {
         return filter;
     }
 
-    public static boolean ensureConnectSuc(Context context, WifiInfo info) {
-        if (info != null && !TextUtils.isEmpty(info.getSSID())) {
+
+    public static boolean ensureConnectSuc(Context context, WifiInfo info){
+        if(info != null && !TextUtils.isEmpty(info.getSSID())){
             String targetSSID = getTargetSSID(context);
-            if (!TextUtils.isEmpty(targetSSID) && targetSSID.equals(info.getSSID())) {
+            if(!TextUtils.isEmpty(targetSSID) && info.getSSID().contains(targetSSID)){
                 Log.i("WIFI_LIST", "5 connected success,  wifi  = " + info.getSSID());
                 return true;
             }
         }
         Log.i("WIFI_LIST", "5 connected fail ");
+
         return false;
     }
 
@@ -90,7 +92,7 @@ public class WifiUtil {
             delegate, List<ScanResult> list, String targetWifiName) {
         SimpleWifiBean simpleWifiBean = null;
         for (ScanResult result : list) {
-            if (result.SSID.equals(targetWifiName)) {
+            if (result.SSID.contains(targetWifiName)) {
                 delegate.stopScan();
                 saveTargetSSID(context, targetWifiName);
                 simpleWifiBean = new SimpleWifiBean();
@@ -107,7 +109,7 @@ public class WifiUtil {
     public static void saveTargetSSID(Context context, String targetSSID) {
         SharedPreferences sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        targetSSID = "\"" + targetSSID + "\""; //refer WifiInfo#getSSID()
+//        targetSSID = "\"" + targetSSID + "\""; //refer WifiInfo#getSSID()
         editor.putString(SSID_KEY, targetSSID);
         editor.commit();
 
@@ -135,7 +137,7 @@ public class WifiUtil {
         WifiManager wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> existingConfigs = wifimanager.getConfiguredNetworks();
         for (WifiConfiguration existingConfig : existingConfigs) {
-            if (existingConfig.SSID.equals("\"" + SSID + "\"")) {
+            if (existingConfig.SSID.contains( SSID )) {
                 return existingConfig;
             }
         }

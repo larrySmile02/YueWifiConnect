@@ -32,8 +32,13 @@ public class WifiDelegateImpl implements WifiDelegate {
         index = 0;
         if (rxPermissions == null) {
             rxPermissions = new RxPermissions(mActivity);
-            pool = Executors.newScheduledThreadPool(1);
         }
+
+        if(pool != null){
+            pool.shutdown();
+            pool = null;
+        }
+        pool = Executors.newScheduledThreadPool(1);
         rxPermissions.request(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION).
                 subscribe(new Consumer<Boolean>() {
                     @Override
