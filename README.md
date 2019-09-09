@@ -21,8 +21,8 @@ scan wifi , filter target wifi , connect target wifi automatically
 
 
 ```
-//返回扫描列表
-@Override
+   //返回扫描列表
+     @Override
     public void resultSuc(final List<ScanResult> list, boolean isLastTime) {
         
     }
@@ -53,8 +53,8 @@ public void filterFailure() {
 
 在Activity生命周期和第2步返回值中调用相关方法
 ```
-//返回扫描列表
-@Override
+    //返回扫描列表
+      @Override
     public void resultSuc(final List<ScanResult> list, boolean isLastTime) {
          helper.filterAndConnectTargetWifi(list,HOTPOINT_TARGET,isLastTime); // HOTPOINT_TARGET是指定的WiFi名
     }
