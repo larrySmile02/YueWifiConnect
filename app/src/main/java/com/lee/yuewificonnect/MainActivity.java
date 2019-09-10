@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ScanResultListener  {
 
-    public static final String HOTPOINT_NBO = "SmartLife-2D39";
+    public static final String HOTPOINT_NBO = "SmartLife-";
     private RecyclerView rec;
     private WifiAdapter adapter;
     private YueWifiHelper helper;
