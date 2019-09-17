@@ -299,7 +299,7 @@ public class WifiUtil {
         long clickMill = System.currentTimeMillis();
         boolean enable = wifimanager.setWifiEnabled(true);
         long printMill = System.currentTimeMillis() - clickMill;
-        boolean needAuthorize = printMill - BEST_RECORD_TIME < 0;
+        boolean needAuthorize = printMill - BEST_RECORD_TIME > 0;
         Log.e("MI_J","needAuthorize = "+needAuthorize+" printMill = "+printMill);
         return needAuthorize ;
     }

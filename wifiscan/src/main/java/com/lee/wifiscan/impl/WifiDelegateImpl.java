@@ -44,7 +44,7 @@ public class WifiDelegateImpl implements WifiDelegate {
 
         //兼容小米手机
         if (WifiUtil.isMIUI()) {
-            if (!WifiUtil.checkMIwifiPermission(mActivity)) {
+            if (WifiUtil.checkMIwifiPermission(mActivity)) {
                 WifiUtil.requestWifiPermision(mActivity);
                 return;
             }
