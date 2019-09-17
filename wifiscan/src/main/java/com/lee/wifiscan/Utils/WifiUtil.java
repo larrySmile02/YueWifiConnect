@@ -1,15 +1,27 @@
 package com.lee.wifiscan.Utils;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.SyncContext;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 
+import com.lee.wifiscan.R;
 import com.lee.wifiscan.bean.SimpleWifiBean;
 import com.lee.wifiscan.bean.WifiCipherType;
 import com.lee.wifiscan.delegate.WifiDelegate;
@@ -20,6 +32,9 @@ import java.util.List;
 public class WifiUtil {
     public static final String SP_NAME = "WIFI_INFO_SAVE";
     public static final String SSID_KEY = "TARGET_SSID_KEY";
+    public static final String MI_WIFI = "MI_WIFI";
+    public static final int MI_REQUEST_CODE = 0x111;
+    public static final int BEST_RECORD_TIME = 400;
 
 
     public static IntentFilter initFilter() {
@@ -30,10 +45,10 @@ public class WifiUtil {
     }
 
 
-    public static boolean ensureConnectSuc(Context context, WifiInfo info){
-        if(info != null && !TextUtils.isEmpty(info.getSSID())){
+    public static boolean ensureConnectSuc(Context context, WifiInfo info) {
+        if (info != null && !TextUtils.isEmpty(info.getSSID())) {
             String targetSSID = getTargetSSID(context);
-            if(!TextUtils.isEmpty(targetSSID) && info.getSSID().contains(targetSSID)){
+            if (!TextUtils.isEmpty(targetSSID) && info.getSSID().contains(targetSSID)) {
                 Log.i("WIFI_LIST", "5 connected success,  wifi  = " + info.getSSID());
                 return true;
             }
@@ -120,6 +135,18 @@ public class WifiUtil {
         return sp.getString(SSID_KEY, "");
     }
 
+    public static void saveMiWifiPermission(Context context, boolean isAllow) {
+        SharedPreferences sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(MI_WIFI, isAllow);
+        editor.commit();
+    }
+
+    public static boolean getMiWifiPermission(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+        return sp.getBoolean(MI_WIFI, false);
+    }
+
     public static int getLevel(int level) {
         if (Math.abs(level) < 50) {
             return 1;
@@ -137,7 +164,7 @@ public class WifiUtil {
         WifiManager wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> existingConfigs = wifimanager.getConfiguredNetworks();
         for (WifiConfiguration existingConfig : existingConfigs) {
-            if (existingConfig.SSID.contains( SSID )) {
+            if (existingConfig.SSID.contains(SSID)) {
                 return existingConfig;
             }
         }
@@ -205,6 +232,7 @@ public class WifiUtil {
 
     /**
      * 接入某个wifi热点
+     * connect to wifi
      */
     public static boolean addNetWork(WifiConfiguration config, Context context) {
 
@@ -236,4 +264,60 @@ public class WifiUtil {
         return result;
 
     }
+
+    /**
+     * 是否 xiaomi 手机
+     * is xiaomi phone
+     */
+    public static boolean isMIUI() {
+        String manufacturer = Build.MANUFACTURER;
+        if (!TextUtils.isEmpty(manufacturer) && "xiaomi".equalsIgnoreCase(manufacturer)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * xiaomi 手动设置权限
+     * xiaomi need to set wifi permission manually
+     */
+    public static void requestWifiPermision(AppCompatActivity activity){
+        showDialo(activity);
+    }
+
+    public static void gotoAuthorize(AppCompatActivity activity){
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
+        intent.setData(uri);
+        activity.startActivityForResult(intent, MI_REQUEST_CODE);
+    }
+
+    public static void showDialo(final AppCompatActivity context){
+       AlertDialog.Builder builder = new AlertDialog.Builder(context);
+       builder.setTitle(context.getString(R.string.permission_request)).
+               setMessage(context.getString(R.string.Wifi_permission)).setPositiveButton(context.getString(R.string.wifi_allow), new DialogInterface.OnClickListener() {
+           @Override
+           public void onClick(DialogInterface dialog, int which) {
+               gotoAuthorize(context);
+           }
+       }).setNegativeButton(context.getString(R.string.wifi_denial), new DialogInterface.OnClickListener() {
+           @Override
+           public void onClick(DialogInterface dialog, int which) {
+
+           }
+       }).show();
+    }
+
+
+    public static boolean checkMIwifiPermission(AppCompatActivity activity){
+        WifiManager wifimanager = (WifiManager) activity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        long clickMill = System.currentTimeMillis();
+        boolean enable = wifimanager.setWifiEnabled(true);
+        long printMill = System.currentTimeMillis() - clickMill;
+        boolean needAuthorize = printMill - BEST_RECORD_TIME < 0;
+        Log.e("MI_J","needAuthorize = "+needAuthorize+" printMill = "+printMill);
+        return needAuthorize ;
+    }
+
+
 }

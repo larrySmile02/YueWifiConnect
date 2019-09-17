@@ -1,9 +1,11 @@
 package com.lee.wifiscan.Utils;
 
+import android.app.Activity;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.lee.wifiscan.broadcast.WifiBroadcastReceiver;
 import com.lee.wifiscan.delegate.WifiDelegate;
@@ -76,6 +78,19 @@ public class YueWifiHelper {
      */
     public void destroy() {
         mContext.get().unregisterReceiver(receiver);
+    }
+
+    /**9. xiaomi 手机特殊判断*/
+    public void onActivityResult(int requestCode, int resultCode){
+        if(WifiUtil.isMIUI() && requestCode == WifiUtil.MI_REQUEST_CODE ){
+            if(resultCode == Activity.RESULT_OK){
+                WifiUtil.saveMiWifiPermission(mContext.get(),true);
+                Log.i("WIFI_LIST", "9 :  YES");
+            }else {
+                WifiUtil.saveMiWifiPermission(mContext.get(),false);
+                Log.i("WIFI_LIST", "9 :  NO");
+            }
+        }
     }
 
 }

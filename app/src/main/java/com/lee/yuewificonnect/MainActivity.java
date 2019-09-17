@@ -1,15 +1,19 @@
 package com.lee.yuewificonnect;
 
+import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lee.wifiscan.Utils.WifiUtil;
 import com.lee.wifiscan.Utils.YueWifiHelper;
 import com.lee.wifiscan.listener.ScanResultListener;
 import com.lee.yuewificonnect.adapter.WifiAdapter;
@@ -18,7 +22,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ScanResultListener  {
 
-    public static final String HOTPOINT_NBO = "SmartLife-";
+    public static final String HOTPOINT_NBO = "SmartLife-2D39";
     private RecyclerView rec;
     private WifiAdapter adapter;
     private YueWifiHelper helper;
@@ -39,17 +43,26 @@ public class MainActivity extends AppCompatActivity implements ScanResultListene
             @Override
             public void onClick(View v) {
                 helper.startScan();
+//                WifiUtil.checkMIwifiPermission(MainActivity.this);
             }
         });
 
+
+
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        helper.onActivityResult(requestCode,resultCode);
+    }
 
     @Override
     protected void onStop() {
         super.onStop();
         helper.stop();
     }
+
 
     @Override
     protected void onDestroy() {

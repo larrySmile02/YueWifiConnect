@@ -4,9 +4,11 @@ import android.Manifest;
 import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.lee.wifiscan.Utils.WifiUtil;
 import com.lee.wifiscan.delegate.WifiDelegate;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -34,11 +36,20 @@ public class WifiDelegateImpl implements WifiDelegate {
             rxPermissions = new RxPermissions(mActivity);
         }
 
-        if(pool != null){
+        if (pool != null) {
             pool.shutdown();
             pool = null;
         }
         pool = Executors.newScheduledThreadPool(1);
+
+        //兼容小米手机
+        if (WifiUtil.isMIUI()) {
+            if (!WifiUtil.checkMIwifiPermission(mActivity)) {
+                WifiUtil.requestWifiPermision(mActivity);
+                return;
+            }
+
+        }
         rxPermissions.request(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION).
                 subscribe(new Consumer<Boolean>() {
                     @Override
@@ -83,4 +94,5 @@ public class WifiDelegateImpl implements WifiDelegate {
             pool.shutdown();
         }
     }
+
 }
