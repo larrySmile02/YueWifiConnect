@@ -1,3 +1,4 @@
+[中文Readme](https://github.com/larrySmile02/YueWifiConnect/edit/master/README.md)
 # YueWifiConnect
 scan wifi , filter target wifi , connect target wifi automatically
 
