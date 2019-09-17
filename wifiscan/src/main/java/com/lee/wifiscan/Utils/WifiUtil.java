@@ -1,12 +1,10 @@
 package com.lee.wifiscan.Utils;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.SyncContext;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
@@ -18,8 +16,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.lee.wifiscan.R;
 import com.lee.wifiscan.bean.SimpleWifiBean;
@@ -135,17 +131,6 @@ public class WifiUtil {
         return sp.getString(SSID_KEY, "");
     }
 
-    public static void saveMiWifiPermission(Context context, boolean isAllow) {
-        SharedPreferences sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(MI_WIFI, isAllow);
-        editor.commit();
-    }
-
-    public static boolean getMiWifiPermission(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
-        return sp.getBoolean(MI_WIFI, false);
-    }
 
     public static int getLevel(int level) {
         if (Math.abs(level) < 50) {

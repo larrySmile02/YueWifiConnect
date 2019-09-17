@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements ScanResultListene
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        helper.onActivityResult(requestCode,resultCode);
     }
 
     @Override

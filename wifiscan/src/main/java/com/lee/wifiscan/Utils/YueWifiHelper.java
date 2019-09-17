@@ -80,17 +80,5 @@ public class YueWifiHelper {
         mContext.get().unregisterReceiver(receiver);
     }
 
-    /**9. xiaomi 手机特殊判断*/
-    public void onActivityResult(int requestCode, int resultCode){
-        if(WifiUtil.isMIUI() && requestCode == WifiUtil.MI_REQUEST_CODE ){
-            if(resultCode == Activity.RESULT_OK){
-                WifiUtil.saveMiWifiPermission(mContext.get(),true);
-                Log.i("WIFI_LIST", "9 :  YES");
-            }else {
-                WifiUtil.saveMiWifiPermission(mContext.get(),false);
-                Log.i("WIFI_LIST", "9 :  NO");
-            }
-        }
-    }
 
 }
