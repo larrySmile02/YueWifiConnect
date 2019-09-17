@@ -4,7 +4,7 @@ scan wifi , filter target wifi , connect target wifi automatically
 ### How to target wifi and connect target wifi automatically？
 WifiManager.scan -> get broadcast notify -> wifimanager.updateNetwork or wifimanager.addNetwork
 
-### How to use this demo
+### How to use this library
 1. add permissions in Manifest
 
 ```
